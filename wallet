@@ -1,0 +1,7 @@
+const account = web3.eth.accounts.privateKeyToAccount('YOUR_PRIVATE_KEY');
+web3.eth.accounts.wallet.add(account);
+web3.eth.sendTransaction({
+    from: account.address,
+    to: '0xRecipientAddress',
+    value: web3.utils.toWei('0.1', 'ether')
+}).then(console.log);
