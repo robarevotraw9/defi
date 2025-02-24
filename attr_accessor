@@ -1,0 +1,41 @@
+class Task
+  attr_accessor :title, :completed
+
+  def initialize(title)
+    @title = title
+    @completed = false
+  end
+
+  def complete
+    @completed = true
+  end
+
+  def display
+    status = @completed ? "✔" : "✘"
+    puts "#{status} #{title}"
+  end
+end
+
+class TaskList
+  def initialize
+    @tasks = []
+  end
+
+  def add_task(task)
+    @tasks << task
+  end
+
+  def show_tasks
+    @tasks.each(&:display)
+  end
+end
+
+task1 = Task.new("学习Ruby")
+task2 = Task.new("完成作业")
+
+tasks = TaskList.new
+tasks.add_task(task1)
+tasks.add_task(task2)
+
+task1.complete
+tasks.show_tasks
