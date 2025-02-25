@@ -1,0 +1,67 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.json());
+
+// 连接 MongoDB
+mongoose.connect('mongodb://localhost:27017/mydb', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => console.log('MongoDB connected'))
+  .catch(err => console.error(err));
+
+// 定义 Mongoose Schema 和 Model
+const ItemSchema = new mongoose.Schema({
+    name: String,
+    description: String,
+    createdAt: { type: Date, default: Date.now }
+});
+const Item = mongoose.model('Item', ItemSchema);
+
+// 创建一个 item
+app.post('/items', async (req, res) => {
+    try {
+        const item = new Item(req.body);
+        await item.save();
+        res.status(201).json(item);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 查询所有 items
+app.get('/items', async (req, res) => {
+    try {
+        const items = await Item.find();
+        res.json(items);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 更新指定 item
+app.put('/items/:id', async (req, res) => {
+    try {
+        const item = await Item.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!item) return res.status(404).json({ error: 'Item not found' });
+        res.json(item);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 删除指定 item
+app.delete('/items/:id', async (req, res) => {
+    try {
+        const item = await Item.findByIdAndDelete(req.params.id);
+        if (!item) return res.status(404).json({ error: 'Item not found' });
+        res.json({ message: 'Item deleted' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
