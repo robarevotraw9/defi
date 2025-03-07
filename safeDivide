@@ -1,0 +1,17 @@
+-- 定义安全除法函数，防止除以0的情况
+safeDivide :: Double -> Double -> Maybe Double
+safeDivide _ 0 = Nothing
+safeDivide x y = Just (x / y)
+
+compute :: Double -> Double -> Double -> Maybe Double
+compute a b c = do
+    r1 <- safeDivide a b
+    r2 <- safeDivide r1 c
+    return r2
+
+main :: IO ()
+main = do
+    let result1 = compute 10 2 2
+    let result2 = compute 10 0 2
+    print result1  -- 输出: Just 2.5
+    print result2  -- 输出: Nothing
