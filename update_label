@@ -1,0 +1,15 @@
+import tkinter as tk
+
+def update_label():
+    label.config(text="按钮被点击了！")
+
+root = tk.Tk()
+root.title("简单Tkinter示例")
+
+label = tk.Label(root, text="Hello, Tkinter!")
+label.pack(padx=20, pady=20)
+
+button = tk.Button(root, text="点击我", command=update_label)
+button.pack(padx=20, pady=20)
+
+root.mainloop()
