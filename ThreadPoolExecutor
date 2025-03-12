@@ -1,0 +1,29 @@
+import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+urls = [
+    'https://www.example.com',
+    'https://www.python.org',
+    'https://www.github.com',
+    # 可根据需要添加更多URL
+]
+
+def fetch(url):
+    try:
+        response = requests.get(url, timeout=5)
+        return url, response.status_code, response.text[:100]  # 仅返回前100个字符
+    except Exception as e:
+        return url, None, str(e)
+
+def main():
+    results = []
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        future_to_url = {executor.submit(fetch, url): url for url in urls}
+        for future in as_completed(future_to_url):
+            url, status, content = future.result()
+            results.append((url, status, content))
+            print(f"URL: {url}, Status: {status}")
+    return results
+
+if __name__ == '__main__':
+    main()
