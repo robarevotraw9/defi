@@ -1,0 +1,19 @@
+// 安装ethers库: npm install ethers
+const { ethers } = require("ethers");
+
+// 连接到以太坊网络（本例使用本地节点）
+const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:7545");
+
+// 合约地址和ABI（示例）
+const contractAddress = "0xYourContractAddress";
+const abi = [
+    "function storedData() view returns (uint256)"
+];
+
+async function readContract() {
+    const contract = new ethers.Contract(contractAddress, abi, provider);
+    const data = await contract.storedData();
+    console.log("Stored Data:", data.toString());
+}
+
+readContract();
