@@ -1,0 +1,14 @@
+#!/bin/bash
+
+LOGFILE="system_monitor.log"
+INTERVAL=5
+
+echo "开始系统监控，日志文件：$LOGFILE"
+
+while true; do
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')
+    mem_usage=$(free -m | awk 'NR==2{printf "%.2f", $3*100/$2 }')
+    echo "$timestamp CPU: $cpu_usage%, Memory: $mem_usage%" >> $LOGFILE
+    sleep $INTERVAL
+done
