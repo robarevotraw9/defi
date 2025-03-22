@@ -1,0 +1,21 @@
+import Foundation
+import Combine
+
+class DataFetcher {
+    var dataPublisher = PassthroughSubject<String, Never>()
+    
+    func fetchData() {
+        // 模拟网络请求
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+            self.dataPublisher.send("Fetched Data!")
+        }
+    }
+}
+
+let fetcher = DataFetcher()
+let subscriber = fetcher.dataPublisher.sink(receiveValue: { value in
+    print("Received: \(value)")
+})
+
+fetcher.fetchData()
+RunLoop.main.run()
