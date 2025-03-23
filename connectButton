@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MetaMask集成示例</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+</head>
+<body>
+    <button id="connectButton">连接MetaMask</button>
+    <script>
+        const connectButton = document.getElementById('connectButton');
+
+        connectButton.addEventListener('click', async () => {
+            if (window.ethereum) {
+                try {
+                    // 请求账户访问
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const web3 = new Web3(window.ethereum);
+                    const accounts = await web3.eth.getAccounts();
+                    alert("已连接账户: " + accounts[0]);
+                } catch (error) {
+                    console.error("连接错误:", error);
+                }
+            } else {
+                alert("请安装MetaMask!");
+            }
+        });
+    </script>
+</body>
+</html>
