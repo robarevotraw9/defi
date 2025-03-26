@@ -1,0 +1,24 @@
+package main
+
+import (
+    "fmt"
+    "net/http"
+    "github.com/gorilla/websocket"
+)
+
+var upgrader = websocket.Upgrader{}
+
+func handleConnection(w http.ResponseWriter, r *http.Request) {
+    conn, _ := upgrader.Upgrade(w, r, nil)
+    defer conn.Close()
+    for {
+        _, msg, _ := conn.ReadMessage()
+        fmt.Println("Received:", string(msg))
+        conn.WriteMessage(websocket.TextMessage, []byte("Hello, Client!"))
+    }
+}
+
+func main() {
+    http.HandleFunc("/ws", handleConnection)
+    http.ListenAndServe(":8080", nil)
+}
