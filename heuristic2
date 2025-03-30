@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cmath>
+
+struct Node {
+    int x, y, cost, priority;
+    bool operator<(const Node& other) const { return priority > other.priority; }
+};
+
+int heuristic(int x1, int y1, int x2, int y2) {
+    return std::abs(x1 - x2) + std::abs(y1 - y2);
+}
+
+void astar(int sx, int sy, int ex, int ey) {
+    std::priority_queue<Node> pq;
+    pq.push({sx, sy, 0, heuristic(sx, sy, ex, ey)});
+    while (!pq.empty()) {
+        Node node = pq.top(); pq.pop();
+        if (node.x == ex && node.y == ey) {
+            std::cout << "Path found!" << std::endl;
+            return;
+        }
+        // Expand neighbors
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dy = -1; dy <= 1; ++dy) {
+                if (dx == 0 && dy == 0) continue;
+                int nx = node.x + dx, ny = node.y + dy;
+                int new_cost = node.cost + 1;
+                int priority = new_cost + heuristic(nx, ny, ex, ey);
+                pq.push({nx, ny, new_cost, priority});
+            }
+        }
+    }
+}
